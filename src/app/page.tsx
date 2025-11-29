@@ -1,6 +1,7 @@
 import LandingFeatures from '@/components/landing-features';
 import LandingHeader from '@/components/landing-header';
 import LandingHero from '@/components/landing-hero';
+import LandingPricing from '@/components/landing-pricing';
 import LandingTestimonials from '@/components/landing-testimonials';
 import SiteFooter from '@/components/site-footer';
 
@@ -11,6 +12,7 @@ export default function Home() {
       <main className="flex-1">
         <LandingHero />
         <LandingFeatures />
+        <LandingPricing />
         <LandingTestimonials />
       </main>
       <SiteFooter />
