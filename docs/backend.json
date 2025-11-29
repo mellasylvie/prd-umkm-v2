@@ -1,0 +1,307 @@
+{
+  "entities": {
+    "UmkmProfile": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UmkmProfile",
+      "type": "object",
+      "description": "Represents a UMKM (Usaha Mikro, Kecil, dan Menengah) profile.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the UMKM profile."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the UMKM."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the UMKM."
+        },
+        "logoUrl": {
+          "type": "string",
+          "description": "URL of the UMKM's logo.",
+          "format": "uri"
+        },
+        "bannerUrl": {
+          "type": "string",
+          "description": "URL of the UMKM's banner image.",
+          "format": "uri"
+        },
+        "contactWhatsapp": {
+          "type": "string",
+          "description": "WhatsApp contact number for the UMKM."
+        },
+        "contactInstagram": {
+          "type": "string",
+          "description": "Instagram username for the UMKM."
+        },
+        "contactShopee": {
+          "type": "string",
+          "description": "Shopee store link for the UMKM."
+        },
+        "location": {
+          "type": "string",
+          "description": "Location of the UMKM."
+        },
+        "minisiteTemplateId": {
+          "type": "string",
+          "description": "Reference to the MinisiteTemplate being used. (Relationship: UmkmProfile 1:1 MinisiteTemplate)"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description"
+      ]
+    },
+    "Product": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Product",
+      "type": "object",
+      "description": "Represents a product offered by a UMKM.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the product."
+        },
+        "umkmId": {
+          "type": "string",
+          "description": "Reference to the UmkmProfile that owns this product. (Relationship: UmkmProfile 1:N Product)"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the product."
+        },
+        "price": {
+          "type": "number",
+          "description": "Price of the product."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the product."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the product image.",
+          "format": "uri"
+        },
+        "category": {
+          "type": "string",
+          "description": "Category of the product."
+        },
+        "stockStatus": {
+          "type": "string",
+          "description": "Stock status of the product (e.g., in stock, out of stock)."
+        }
+      },
+      "required": [
+        "id",
+        "umkmId",
+        "name",
+        "price",
+        "description"
+      ]
+    },
+    "MinisiteTemplate": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "MinisiteTemplate",
+      "type": "object",
+      "description": "Represents a template for a UMKM minisite.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the template."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the template."
+        },
+        "previewImageUrl": {
+          "type": "string",
+          "description": "URL of the template's preview image.",
+          "format": "uri"
+        },
+        "fields": {
+          "type": "string",
+          "description": "A serialized json string representing the fields and configuration of the template"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "PromotionTemplate": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "PromotionTemplate",
+      "type": "object",
+      "description": "Represents a template for promotional content.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the promotion template."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the template."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the template image.",
+          "format": "uri"
+        },
+        "fields": {
+          "type": "string",
+          "description": "A serialized json string representing the fields and configuration of the template"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "VisitorInsight": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "VisitorInsight",
+      "type": "object",
+      "description": "Represents insights into visitor activity for a UMKM.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the visitor insight record."
+        },
+        "umkmId": {
+          "type": "string",
+          "description": "Reference to the UmkmProfile. (Relationship: UmkmProfile 1:N VisitorInsight)"
+        },
+        "totalVisits": {
+          "type": "number",
+          "description": "Total number of visits to the UMKM's minisite."
+        },
+        "popularProducts": {
+          "type": "array",
+          "description": "Array of the most popular product IDs.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ctaClicks": {
+          "type": "number",
+          "description": "Number of clicks on call-to-action buttons."
+        },
+        "date": {
+          "type": "string",
+          "description": "The date this visitor insight represents.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "umkmId",
+        "totalVisits",
+        "ctaClicks",
+        "date"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/umkm_profiles/{umkmProfileId}",
+        "definition": {
+          "entityName": "UmkmProfile",
+          "schema": {
+            "$ref": "#/backend/entities/UmkmProfile"
+          },
+          "description": "Stores UMKM profiles. Each document represents a single UMKM. Includes the unique identifier for the UMKM profile.",
+          "params": [
+            {
+              "name": "umkmProfileId",
+              "description": "The unique identifier for the UMKM profile."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/umkm_profiles/{umkmProfileId}/products/{productId}",
+        "definition": {
+          "entityName": "Product",
+          "schema": {
+            "$ref": "#/backend/entities/Product"
+          },
+          "description": "Stores products associated with a specific UMKM. Includes denormalized 'umkmId' field for authorization independence. Allows direct access to product data without needing to query the parent UmkmProfile.",
+          "params": [
+            {
+              "name": "umkmProfileId",
+              "description": "The unique identifier for the UMKM profile that owns this product."
+            },
+            {
+              "name": "productId",
+              "description": "The unique identifier for the product."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/minisite_templates/{minisiteTemplateId}",
+        "definition": {
+          "entityName": "MinisiteTemplate",
+          "schema": {
+            "$ref": "#/backend/entities/MinisiteTemplate"
+          },
+          "description": "Stores templates for UMKM minisites.",
+          "params": [
+            {
+              "name": "minisiteTemplateId",
+              "description": "The unique identifier for the minisite template."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/promotion_templates/{promotionTemplateId}",
+        "definition": {
+          "entityName": "PromotionTemplate",
+          "schema": {
+            "$ref": "#/backend/entities/PromotionTemplate"
+          },
+          "description": "Stores templates for promotional content.",
+          "params": [
+            {
+              "name": "promotionTemplateId",
+              "description": "The unique identifier for the promotion template."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/umkm_profiles/{umkmProfileId}/visitor_insights/{visitorInsightId}",
+        "definition": {
+          "entityName": "VisitorInsight",
+          "schema": {
+            "$ref": "#/backend/entities/VisitorInsight"
+          },
+          "description": "Stores visitor insights for a specific UMKM. Includes denormalized 'umkmId' field for authorization independence.",
+          "params": [
+            {
+              "name": "umkmProfileId",
+              "description": "The unique identifier for the UMKM profile."
+            },
+            {
+              "name": "visitorInsightId",
+              "description": "The unique identifier for the visitor insight record."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to support the UMKM Boost platform, emphasizing authorization independence, clarity, and scalability. It leverages path-based ownership for user-specific data and denormalization to avoid complex security rules that rely on `get()` calls. Each collection is designed to have a homogeneous security posture.\n\n**Authorization Independence:**\n\n*   `UmkmProfile` documents are stored under `/umkm_profiles/{umkmProfileId}`. This allows direct access to UMKM profiles without needing to traverse user hierarchies.\n*   `Product` documents include the `umkmId` field, effectively denormalizing the relationship. Security rules can directly validate that the user creating or modifying a product has the correct permissions for the specified `umkmId`, avoiding the need for server-side lookups.\n\n**QAPs (Rules are not Filters):**\n\n*   Segregation of data is achieved through dedicated collections like `/umkm_profiles`. This enables secure `list` operations because rules can be applied uniformly to all documents within a collection.\n*   Path-based ownership for products (`/umkm_profiles/{umkmProfileId}/products/{productId}`) ensures that listing products is secure, as rules can easily verify if the requesting user has access to the parent `UmkmProfile`.\n\nThis design ensures that all necessary data for authorization is readily available within each document, eliminating the need for complex `get()` calls in security rules.  By denormalizing `umkmId` into the `Product` document, we enable atomic creation and modification of products without needing to verify the existence or attributes of the parent `UmkmProfile`.  This makes the system more robust and easier to debug."
+  }
+}

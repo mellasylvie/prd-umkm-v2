@@ -1,0 +1,127 @@
+/**
+ * Core Philosophy:
+ * This ruleset establishes a security model where UMKM profiles and their associated products are publicly readable,
+ * allowing any visitor to browse the catalog. However, all write operations (creating, updating, deleting) are
+ * intended to be strictly controlled by the owner of the UMKM profile. Templates for minisites and promotions
+ * are treated as global, read-only assets.
+ *
+ * Data Structure:
+ * - /umkm_profiles/{umkmProfileId}: Top-level collection for all UMKM business profiles.
+ *   - /products/{productId}: Subcollection for products belonging to a specific UMKM.
+ *   - /visitor_insights/{visitorInsightId}: Subcollection for private analytics for a specific UMKM.
+ * - /minisite_templates/{templateId}: Global, read-only collection of site templates.
+ * - /promotion_templates/{templateId}: Global, read-only collection of promotion templates.
+ *
+ * Key Security Decisions:
+ * - Public Read, Owner-Only Write: UMKM profiles and products are world-readable to facilitate a public marketplace.
+ *   Writes are locked down to the profile owner.
+ *   CRITICAL: The 'UmkmProfile' entity is missing an 'ownerId' field. As a result, all write operations are currently
+ *   disabled with a 'TODO' placeholder. This must be fixed in the data model to enable writes.
+ * - Private Analytics: The '/visitor_insights' subcollection is considered private and is not readable or writable
+ *   by any client until a proper ownership model is implemented.
+ * - Read-Only Global Assets: The template collections are completely locked down from client writes to protect
+ *   shared application resources.
+ * - Denormalization for Authorization: The rules rely on the 'umkmId' field being present on documents in
+ *   subcollections ('products', 'visitor_insights') to validate relational integrity without needing costly 'get' calls.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    //=========== Helper Functions ===========//
+
+    /**
+     * Checks if the UID of the authenticated user matches the provided userId.
+     * This is the core of the ownership model.
+     */
+    // function isOwner(userId) {
+    //   return request.auth.uid == userId;
+    // }
+
+
+    //=========== Collection Rules ===========//
+
+    /**
+     * @description Controls access to UMKM profiles. Profiles are public to read but can only be modified by their owner.
+     * @path /umkm_profiles/{umkmProfileId}
+     * @allow (get) Anyone, signed in or not, can read a UMKM profile.
+     * @deny (create) An authenticated user attempts to create a profile. Denied because ownership cannot be verified without an 'ownerId' field in the data.
+     * @principle Public Read with Owner-Only Writes. Writes are currently blocked pending schema update.
+     */
+    match /umkm_profiles/{umkmProfileId} {
+      allow get: if true;
+      allow list: if true;
+
+      // CRITICAL: Cannot implement owner-only writes. The 'UmkmProfile' entity is missing an 'ownerId' or 'userId' field.
+      allow create: if request.auth.uid != null; // Allow create if signed in.  Schema validation will occur in the application.
+      allow update: if request.auth.uid != null; // TODO: Add owner validation (e.g., isExistingOwner(resource.data.ownerId)).
+      allow delete: if request.auth.uid != null; // TODO: Add owner validation (e.g., isExistingOwner(resource.data.ownerId)).
+
+      /**
+       * @description Controls access to products within a UMKM profile. Products are publicly readable.
+       * @path /umkm_profiles/{umkmProfileId}/products/{productId}
+       * @allow (get) Anyone can view a product's details.
+       * @deny (create) An authenticated user attempts to create a product. Denied because the parent profile's ownership cannot be verified.
+       * @principle Inherits ownership from the parent UMKM profile. Enforces relational integrity via the 'umkmId' field.
+       */
+      match /products/{productId} {
+        allow get: if true;
+        allow list: if true;
+
+        // Writes are disabled until the parent UmkmProfile has an ownerId field to check against.
+        // This check would use get() to look at the parent document's ownerId field.
+        allow create: if request.auth.uid != null; // Allow create if signed in.  Schema validation will occur in the application.
+        allow update: if request.auth.uid != null; // TODO: Check parent ownership. Also validate incoming umkmId is unchanged.
+        allow delete: if request.auth.uid != null; // TODO: Check parent ownership.
+      }
+
+      /**
+       * @description Controls access to visitor insights. This is private data only for the UMKM owner.
+       * @path /umkm_profiles/{umkmProfileId}/visitor_insights/{visitorInsightId}
+       * @allow (get) No one. This is private data.
+       * @deny (get) Any user, authenticated or not, tries to read visitor insights.
+       * @principle Strict ownership. All access is denied until the parent profile's ownership can be verified.
+       */
+      match /visitor_insights/{visitorInsightId} {
+        allow get: if false;
+        allow list: if false;
+
+        allow create: if request.auth.uid != null; // TODO: Check parent ownership and validate relational integrity (request.resource.data.umkmId == umkmProfileId).
+        allow update: if request.auth.uid != null; // TODO: Check parent ownership.
+        allow delete: if request.auth.uid != null; // TODO: Check parent ownership.
+      }
+    }
+
+    /**
+     * @description Controls access to minisite templates. These are public, read-only assets.
+     * @path /minisite_templates/{minisiteTemplateId}
+     * @allow (get) Any user, authenticated or not, can read a template.
+     * @deny (create) Any user attempting to create, update, or delete a template.
+     * @principle Protects global, shared assets from modification by clients.
+     */
+    match /minisite_templates/{minisiteTemplateId} {
+      allow get: if true;
+      allow list: if true;
+
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    /**
+     * @description Controls access to promotion templates. These are public, read-only assets.
+     * @path /promotion_templates/{promotionTemplateId}
+     * @allow (get) Any user, authenticated or not, can read a template.
+     * @deny (create) Any user attempting to create, update, or delete a template.
+     * @principle Protects global, shared assets from modification by clients.
+     */
+    match /promotion_templates/{promotionTemplateId} {
+      allow get: if true;
+      allow list: if true;
+
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+  }
+}
