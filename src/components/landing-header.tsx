@@ -12,12 +12,12 @@ export default function LandingHeader() {
       <span className="font-semibold text-xl ml-2">UMKM Boost</span>
       <nav className="ml-auto flex gap-4 sm:gap-6">
         <Button variant="ghost" asChild>
-          <Link href="/dashboard" prefetch={false}>
+          <Link href="/login" prefetch={false}>
             Login
           </Link>
         </Button>
         <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground">
-          <Link href="/dashboard" prefetch={false}>
+          <Link href="/register" prefetch={false}>
             Sign Up
           </Link>
         </Button>

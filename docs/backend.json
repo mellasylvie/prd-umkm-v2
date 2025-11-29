@@ -1,5 +1,22 @@
 {
   "entities": {
+    "User": {
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user account in the system.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the user (matches Firebase Auth UID)."
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "The user's email address."
+        }
+      },
+      "required": ["id", "email"]
+    },
     "UmkmProfile": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "UmkmProfile",
@@ -9,6 +26,10 @@
         "id": {
           "type": "string",
           "description": "Unique identifier for the UMKM profile."
+        },
+        "ownerId": {
+            "type": "string",
+            "description": "The UID of the user who owns this UMKM profile."
         },
         "name": {
           "type": "string",
@@ -51,6 +72,7 @@
       },
       "required": [
         "id",
+        "ownerId",
         "name",
         "description"
       ]
@@ -207,12 +229,27 @@
   },
   "auth": {
     "providers": [
-      "password",
-      "anonymous"
+      "password"
     ]
   },
   "firestore": {
     "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores public user profiles. The document ID is the user's UID from Firebase Authentication.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            }
+          ]
+        }
+      },
       {
         "path": "/umkm_profiles/{umkmProfileId}",
         "definition": {
@@ -220,7 +257,7 @@
           "schema": {
             "$ref": "#/backend/entities/UmkmProfile"
           },
-          "description": "Stores UMKM profiles. Each document represents a single UMKM. Includes the unique identifier for the UMKM profile.",
+          "description": "Stores UMKM profiles. Each document represents a single UMKM and includes an 'ownerId' to link it to a user.",
           "params": [
             {
               "name": "umkmProfileId",
@@ -236,7 +273,7 @@
           "schema": {
             "$ref": "#/backend/entities/Product"
           },
-          "description": "Stores products associated with a specific UMKM. Includes denormalized 'umkmId' field for authorization independence. Allows direct access to product data without needing to query the parent UmkmProfile.",
+          "description": "Stores products associated with a specific UMKM. Includes denormalized 'umkmId' field for authorization independence.",
           "params": [
             {
               "name": "umkmProfileId",
@@ -302,6 +339,6 @@
         }
       }
     ],
-    "reasoning": "The Firestore structure is designed to support the UMKM Boost platform, emphasizing authorization independence, clarity, and scalability. It leverages path-based ownership for user-specific data and denormalization to avoid complex security rules that rely on `get()` calls. Each collection is designed to have a homogeneous security posture.\n\n**Authorization Independence:**\n\n*   `UmkmProfile` documents are stored under `/umkm_profiles/{umkmProfileId}`. This allows direct access to UMKM profiles without needing to traverse user hierarchies.\n*   `Product` documents include the `umkmId` field, effectively denormalizing the relationship. Security rules can directly validate that the user creating or modifying a product has the correct permissions for the specified `umkmId`, avoiding the need for server-side lookups.\n\n**QAPs (Rules are not Filters):**\n\n*   Segregation of data is achieved through dedicated collections like `/umkm_profiles`. This enables secure `list` operations because rules can be applied uniformly to all documents within a collection.\n*   Path-based ownership for products (`/umkm_profiles/{umkmProfileId}/products/{productId}`) ensures that listing products is secure, as rules can easily verify if the requesting user has access to the parent `UmkmProfile`.\n\nThis design ensures that all necessary data for authorization is readily available within each document, eliminating the need for complex `get()` calls in security rules.  By denormalizing `umkmId` into the `Product` document, we enable atomic creation and modification of products without needing to verify the existence or attributes of the parent `UmkmProfile`.  This makes the system more robust and easier to debug."
+    "reasoning": "The Firestore structure is designed to support the UMKM Boost platform, emphasizing authorization independence, clarity, and scalability. It leverages path-based ownership for user-specific data and denormalization to avoid complex security rules that rely on `get()` calls. Each collection is designed to have a homogeneous security posture.\n\n**Authorization Independence:**\n\n*   `UmkmProfile` documents are stored under `/umkm_profiles/{umkmProfileId}` and now contain an `ownerId` to link them to a specific user.\n*   `Product` documents include the `umkmId` field, effectively denormalizing the relationship. Security rules can directly validate that the user creating or modifying a product has the correct permissions for the specified `umkmId` by checking the parent `UmkmProfile`'s `ownerId`.\n\n**QAPs (Rules are not Filters):**\n\n*   Segregation of data is achieved through dedicated collections like `/umkm_profiles`. This enables secure `list` operations because rules can be applied uniformly to all documents within a collection.\n*   Path-based ownership for products (`/umkm_profiles/{umkmProfileId}/products/{productId}`) ensures that listing products is secure, as rules can easily verify if the requesting user has access to the parent `UmkmProfile`.\n\nThis design ensures that all necessary data for authorization is readily available within each document or its parent, making the system more robust and easier to debug."
   }
 }
