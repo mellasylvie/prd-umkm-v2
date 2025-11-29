@@ -20,7 +20,9 @@ import {
   MessageCircle,
   Loader2,
   Save,
+  Eye,
 } from 'lucide-react';
+import Link from 'next/link';
 
 import { getImage } from '@/lib/data';
 import {
@@ -33,12 +35,10 @@ import {
   collection,
   query,
   where,
-  doc,
 } from 'firebase/firestore';
 import { useForm, Controller } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { setDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 import { UmkmProfile, updateUmkmProfile } from '@/firebase/firestore/data';
 
 const templates = [
@@ -246,14 +246,24 @@ export default function MinisiteEditorPage() {
               <Smartphone className="h-6 w-6" />
               <CardTitle>Live Preview</CardTitle>
             </div>
-            <Button type="submit" disabled={isSaving}>
-              {isSaving ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <Save className="mr-2 h-4 w-4" />
+            <div className="flex items-center gap-2">
+              {umkmProfile && (
+                <Button variant="outline" size="sm" asChild>
+                  <Link href={`/site/${umkmProfile.id}`} target="_blank">
+                    <Eye className="mr-2 h-4 w-4" />
+                    Lihat Minisite
+                  </Link>
+                </Button>
               )}
-              Simpan Perubahan
-            </Button>
+              <Button type="submit" disabled={isSaving}>
+                {isSaving ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Save className="mr-2 h-4 w-4" />
+                )}
+                Simpan
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="w-full aspect-[9/19] bg-muted rounded-lg border-4 border-foreground/50 overflow-y-auto p-2">

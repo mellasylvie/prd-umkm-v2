@@ -83,8 +83,8 @@ service cloud.firestore {
 
         // Writes are allowed if the user owns the parent UMKM profile.
         // The umkmId in the document must also match the parent path.
-        allow create: if isUmkmOwner(umkmProfileId) && request.resource.data.umkmId == umkmProfileId;
-        allow update: if isUmkmOwner(umkmProfileId) && request.resource.data.umkmId == resource.data.umkmId; // Prevent moving product to another UMKM
+        allow create: if isUmkmOwner(umkmProfileId) && request.resource.data.umkmProfileId == umkmProfileId;
+        allow update: if isUmkmOwner(umkmProfileId) && request.resource.data.umkmProfileId == resource.data.umkmProfileId; // Prevent moving product to another UMKM
         allow delete: if isUmkmOwner(umkmProfileId);
       }
 

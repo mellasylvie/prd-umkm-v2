@@ -31,7 +31,6 @@ import {
   initiateEmailSignIn,
   initiateEmailSignUp,
 } from '@/firebase/non-blocking-login';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { createUmkmProfileForUser } from '@/firebase/firestore/data';
 
 
@@ -77,17 +76,10 @@ export default function AuthForm({ type }: AuthFormProps) {
   });
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
-      if (firebaseUser) {
-        if (type === 'register' && 'umkmName' in form.getValues()) {
-            const values = form.getValues() as z.infer<typeof registerSchema>;
-            await createUmkmProfileForUser(firestore, firebaseUser, values.umkmName);
-        }
+    if (!isUserLoading && user) {
         router.push('/dashboard');
-      }
-    });
-    return () => unsubscribe();
-  }, [auth, firestore, router, type, form]);
+    }
+  }, [user, isUserLoading, router]);
 
 
   const onSubmit = async (values: FormValues) => {
@@ -95,19 +87,44 @@ export default function AuthForm({ type }: AuthFormProps) {
     try {
       if (type === 'login') {
         await initiateEmailSignIn(auth, values.email, values.password);
+        toast({
+          title: 'Login Berhasil',
+          description: 'Anda akan segera dialihkan ke dasbor.',
+        });
+        // Redirect is handled by useEffect
       } else if (type === 'register' && 'umkmName' in values) {
-        await initiateEmailSignUp(auth, values.email, values.password);
+        const userCredential = await initiateEmailSignUp(auth, values.email, values.password);
+        await createUmkmProfileForUser(firestore, userCredential.user, values.umkmName);
+        toast({
+            title: 'Registrasi Berhasil',
+            description: 'Akun Anda telah dibuat. Anda akan dialihkan ke dasbor.',
+        });
+        // Redirect is handled by useEffect
       }
-      toast({
-        title: 'Mohon tunggu...',
-        description: 'Anda akan segera dialihkan.',
-      });
     } catch (error: any) {
       setIsSubmitting(false);
+      let errorMessage = 'Terjadi kesalahan tak terduga.';
+      if (error.code) {
+        switch (error.code) {
+            case 'auth/email-already-in-use':
+              errorMessage = 'Email ini sudah terdaftar. Silakan gunakan email lain atau login.';
+              break;
+            case 'auth/wrong-password':
+            case 'auth/user-not-found': // Simplified for user experience
+              errorMessage = 'Email atau password salah.';
+              break;
+            case 'auth/invalid-email':
+                errorMessage = 'Format email tidak valid.';
+                break;
+            default:
+              errorMessage = 'Terjadi kesalahan autentikasi. Silakan coba lagi.';
+              break;
+          }
+      }
       toast({
         variant: 'destructive',
         title: 'Autentikasi Gagal',
-        description: error.message || 'Terjadi kesalahan tak terduga.',
+        description: errorMessage,
       });
     }
   };

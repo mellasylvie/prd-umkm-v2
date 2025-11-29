@@ -116,7 +116,7 @@ export default function CatalogPage() {
                         product.stockStatus === 'Low Stock' ? 'bg-amber-500 text-black' : ''
                       }
                     >
-                      {product.stockStatus}
+                      {product.stockStatus === 'In Stock' ? 'Stok Tersedia' : product.stockStatus === 'Low Stock' ? 'Stok Terbatas' : 'Stok Habis' }
                     </Badge>
                     <Button variant="outline" size="sm">Edit</Button>
                   </CardFooter>

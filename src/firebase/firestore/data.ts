@@ -3,11 +3,9 @@
 import {
   Firestore,
   doc,
-  setDoc,
   addDoc,
   collection,
   serverTimestamp,
-  updateDoc as firestoreUpdateDoc,
 } from 'firebase/firestore';
 import { User } from 'firebase/auth';
 import {
@@ -57,10 +55,13 @@ export const createUmkmProfileForUser = async (
     description: `Selamat datang di ${umkmName}! Kami menyediakan produk-produk berkualitas.`,
   };
 
-  // Use non-blocking writes
-  setDocumentNonBlocking(umkmProfileRef, newUmkmProfile, {});
-  setDocumentNonBlocking(userRef, { umkmProfileId: umkmProfileRef.id, email: user.email }, { merge: true });
+  // Create a document with the custom ID
+  await setDocumentNonBlocking(doc(firestore, 'umkm_profiles', umkmProfileRef.id), newUmkmProfile);
+  
+  // Update the user document with the new UMKM profile ID
+  await setDocumentNonBlocking(userRef, { umkmProfileId: umkmProfileRef.id, email: user.email }, { merge: true });
 };
+
 
 // Function to add a new product to a UMKM profile
 export const addProduct = async (
