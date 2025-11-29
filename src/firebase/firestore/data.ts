@@ -6,12 +6,14 @@ import {
   addDoc,
   collection,
   serverTimestamp,
+  deleteDoc,
 } from 'firebase/firestore';
 import { User } from 'firebase/auth';
 import {
   setDocumentNonBlocking,
   addDocumentNonBlocking,
   updateDocumentNonBlocking,
+  deleteDocumentNonBlocking
 } from '@/firebase/non-blocking-updates';
 
 // Data types matching firestore structure
@@ -85,6 +87,32 @@ export const addProduct = async (
   // Uses non-blocking add. It will resolve to a DocumentReference, but we don't need to wait.
   return addDocumentNonBlocking(productsCollectionRef, newProduct);
 };
+
+// Function to update a product
+export const updateProduct = async (
+  firestore: Firestore,
+  umkmProfileId: string,
+  productId: string,
+  data: Partial<Omit<Product, 'id' | 'umkmProfileId'>>
+) => {
+    const productRef = doc(firestore, `umkm_profiles/${umkmProfileId}/products/${productId}`);
+    const updateData = {
+        ...data,
+        updatedAt: serverTimestamp(),
+    };
+    return updateDocumentNonBlocking(productRef, updateData);
+};
+
+// Function to delete a product
+export const deleteProduct = async (
+    firestore: Firestore,
+    umkmProfileId: string,
+    productId: string
+) => {
+    const productRef = doc(firestore, `umkm_profiles/${umkmProfileId}/products/${productId}`);
+    return deleteDocumentNonBlocking(productRef);
+};
+
 
 // Function to update a UMKM profile
 export const updateUmkmProfile = async (

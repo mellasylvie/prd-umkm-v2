@@ -16,14 +16,7 @@ import {
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/firebase"
-
-const navItems = [
-  { href: "/dashboard", icon: Home, label: "Dashboard" },
-  { href: "/dashboard/minisite", icon: LayoutTemplate, label: "Minisite" },
-  { href: "/dashboard/katalog", icon: BookCopy, label: "Katalog" },
-  { href: "/dashboard/promosi", icon: Megaphone, label: "Promosi" },
-  { href: "/dashboard/insight", icon: BarChart2, label: "Insight" },
-];
+import { navItems } from "./dashboard-nav-items"
 
 export default function DashboardSidebar() {
   const pathname = usePathname();

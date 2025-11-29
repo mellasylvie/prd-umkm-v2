@@ -105,7 +105,7 @@ export default function MinisiteEditorPage() {
 
   if (isLoadingProfile) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center h-[calc(100vh-200px)]">
         <Loader2 className="h-16 w-16 animate-spin text-primary" />
       </div>
     );
@@ -114,8 +114,14 @@ export default function MinisiteEditorPage() {
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-6 md:grid-cols-3">
       <div className="md:col-span-1 flex flex-col gap-6">
+        <div className="md:hidden sticky top-[60px] bg-background z-10 py-2">
+            <h1 className="text-xl font-bold">Editor Minisite</h1>
+            <p className="text-sm text-muted-foreground">
+              Sesuaikan tampilan dan informasi minisite Anda.
+            </p>
+        </div>
         <Card>
-          <CardHeader>
+          <CardHeader className="hidden md:flex">
             <CardTitle>Editor Minisite</CardTitle>
             <CardDescription>
               Sesuaikan tampilan dan informasi minisite Anda.
@@ -189,7 +195,7 @@ export default function MinisiteEditorPage() {
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="location">Lokasi & Peta</Label>
+              <Label htmlFor="location">Lokasi &amp; Peta</Label>
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-muted-foreground" />
                  <Controller
@@ -266,7 +272,7 @@ export default function MinisiteEditorPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="w-full aspect-[9/19] bg-muted rounded-lg border-4 border-foreground/50 overflow-y-auto p-2">
+            <div className="w-full max-w-md mx-auto aspect-[9/19] bg-muted rounded-lg border-4 border-foreground/50 overflow-y-auto p-2">
               <div className="bg-background rounded-md">
                 {userBanner && (
                   <Image

@@ -101,7 +101,7 @@ export default function PromotionGenerator() {
     navigator.clipboard.writeText(generatedContent);
     toast({
       title: 'Berhasil Disalin',
-      description: 'Caption promosi telah disalin ke clipboard.',
+      description: 'Konten promosi telah disalin ke clipboard.',
     });
   };
 
@@ -219,7 +219,7 @@ export default function PromotionGenerator() {
                         <SelectItem value="minimalist">Minimalist</SelectItem>
                         <SelectItem value="elegant">Elegant</SelectItem>
                         <SelectItem value="modern">Modern</SelectItem>
-                        <SelectItem value="fun">Fun & Playful</SelectItem>
+                        <SelectItem value="fun">Fun &amp; Playful</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -258,7 +258,7 @@ export default function PromotionGenerator() {
                 <Textarea
                     readOnly
                     value={generatedContent || "Hasil caption akan muncul di sini..."}
-                    className="h-full min-h-[350px] text-base"
+                    className="h-full min-h-[350px] text-base resize-none"
                 />
              ) : (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -279,14 +279,16 @@ export default function PromotionGenerator() {
              )
           )}
         </CardContent>
-        <CardFooter className="justify-end gap-2">
-          <Button variant="outline" onClick={copyToClipboard} disabled={!generatedContent}>
-            <Copy className="mr-2 h-4 w-4" /> Salin
-          </Button>
-          <Button disabled={!generatedContent}>
-            <Share2 className="mr-2 h-4 w-4" /> Bagikan
-          </Button>
-        </CardFooter>
+        {generatedContent && form.watch('promotionType') === 'caption' && (
+             <CardFooter className="justify-end gap-2">
+                <Button variant="outline" onClick={copyToClipboard} disabled={!generatedContent}>
+                    <Copy className="mr-2 h-4 w-4" /> Salin
+                </Button>
+                <Button disabled={!generatedContent}>
+                    <Share2 className="mr-2 h-4 w-4" /> Bagikan
+                </Button>
+             </CardFooter>
+        )}
       </Card>
     </div>
   );
