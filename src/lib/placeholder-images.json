@@ -1,3 +1,112 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "minisite-mockup",
+      "description": "Mockup of a UMKM Boost minisite on a phone",
+      "imageUrl": "https://images.unsplash.com/photo-1664883247910-c83c54ccdd76?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwaG9uZSUyMG1vY2t1cHxlbnwwfHx8fDE3NjQzNjExMDd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "phone mockup"
+    },
+    {
+      "id": "testimonial-avatar-1",
+      "description": "Avatar for a testimonial from Budi Santoso",
+      "imageUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxtYW4lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjQzNTkwNDh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man portrait"
+    },
+    {
+      "id": "testimonial-avatar-2",
+      "description": "Avatar for a testimonial from Siti Aminah",
+      "imageUrl": "https://images.unsplash.com/photo-1592621385612-4d7129426394?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx3b21hbiUyMHBvcnRyYWl0fGVufDB8fHx8MTc2NDM3NDYyMXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woman portrait"
+    },
+    {
+      "id": "testimonial-avatar-3",
+      "description": "Avatar for a testimonial from Rian Nugraha",
+      "imageUrl": "https://images.unsplash.com/photo-1484863137850-59afcfe05386?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwZXJzb24lMjBzbWlsaW5nfGVufDB8fHx8MTc2NDM0NzAyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "person smiling"
+    },
+    {
+      "id": "product-1",
+      "description": "Product image for Kopi Gayo",
+      "imageUrl": "https://images.unsplash.com/photo-1580933073521-dc49ac0d4e6a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxjb2ZmZWUlMjBiZWFuc3xlbnwwfHx8fDE3NjQzOTUxNDR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "coffee beans"
+    },
+    {
+      "id": "product-2",
+      "description": "Product image for Keripik Singkong",
+      "imageUrl": "https://images.unsplash.com/photo-1621535788070-0bd5512e44a1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxjYXNzYXZhJTIwY2hpcHN8ZW58MHx8fHwxNzY0Mzk5NTc0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cassava chips"
+    },
+    {
+      "id": "product-3",
+      "description": "Product image for Batik Tulis",
+      "imageUrl": "https://images.unsplash.com/photo-1761516659766-c092d4b1209d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxiYXRpayUyMGZhYnJpY3xlbnwwfHx8fDE3NjQzOTk1NzV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "batik fabric"
+    },
+    {
+      "id": "product-4",
+      "description": "Product image for Madu Hutan",
+      "imageUrl": "https://images.unsplash.com/photo-1663963603322-d51827492f69?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxob25leSUyMGphcnxlbnwwfHx8fDE3NjQzNDQ2MzZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "honey jar"
+    },
+    {
+      "id": "product-5",
+      "description": "Product image for Sambal Terasi",
+      "imageUrl": "https://images.unsplash.com/photo-1764032761812-5b9d24c0ed90?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjaGlsaSUyMHBhc3RlfGVufDB8fHx8MTc2NDM5OTU3NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "chili paste"
+    },
+    {
+      "id": "product-6",
+      "description": "Product image for Tas Anyam",
+      "imageUrl": "https://images.unsplash.com/photo-1759054716603-c1f5f72511ac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8d292ZW4lMjBiYWd8ZW58MHx8fHwxNzY0Mzk5NTc1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woven bag"
+    },
+    {
+      "id": "template-minimalist",
+      "description": "Minimalist minisite template thumbnail",
+      "imageUrl": "https://images.unsplash.com/photo-1724422109078-3c837b7a66eb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxtaW5pbWFsaXN0JTIwd2Vic2l0ZXxlbnwwfHx8fDE3NjQzOTk1NzR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "minimalist website"
+    },
+    {
+      "id": "template-elegant",
+      "description": "Elegant minisite template thumbnail",
+      "imageUrl": "https://images.unsplash.com/photo-1553207660-950fd24795d2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxlbGVnYW50JTIwZGVzaWdufGVufDB8fHx8MTc2NDM5OTU3NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "elegant design"
+    },
+    {
+      "id": "template-modern",
+      "description": "Modern minisite template thumbnail",
+      "imageUrl": "https://images.unsplash.com/photo-1649783464933-fabc08425396?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxtb2Rlcm4lMjBsYXlvdXR8ZW58MHx8fHwxNzY0MzM2NjY3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "modern layout"
+    },
+    {
+      "id": "user-logo",
+      "description": "Placeholder for user's business logo",
+      "imageUrl": "https://images.unsplash.com/photo-1562783912-21ad31ee2a83?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjb21wYW55JTIwbG9nb3xlbnwwfHx8fDE3NjQzNjg1MTJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "company logo"
+    },
+    {
+      "id": "user-banner",
+      "description": "Placeholder for user's minisite banner",
+      "imageUrl": "https://images.unsplash.com/photo-1649783467344-4dfdb3b55036?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxhYnN0cmFjdCUyMGJhbm5lcnxlbnwwfHx8fDE3NjQzOTk1NzR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "abstract banner"
+    },
+    {
+      "id": "poster-template-1",
+      "description": "First poster template",
+      "imageUrl": "https://images.unsplash.com/photo-1584448097764-374f81551427?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxwb3N0ZXIlMjBkZXNpZ258ZW58MHx8fHwxNzY0MzE5OTQwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "poster design"
+    },
+    {
+      "id": "poster-template-2",
+      "description": "Second poster template",
+      "imageUrl": "https://images.unsplash.com/photo-1613909207039-6b173b755cc1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxncmFwaGljJTIwZGVzaWdufGVufDB8fHx8MTc2NDMyOTQ0MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "graphic design"
+    },
+    {
+      "id": "poster-template-3",
+      "description": "Third poster template",
+      "imageUrl": "https://images.unsplash.com/photo-1533069027836-fa937181a8ce?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxhZHZlcnRpc2VtZW50fGVufDB8fHx8MTc2NDM5OTU3NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "advertisement"
+    }
+  ]
 }
