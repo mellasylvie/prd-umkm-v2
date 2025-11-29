@@ -31,56 +31,6 @@ export const testimonials = [
   },
 ];
 
-export const products = [
-    {
-      id: 'prod_1',
-      name: 'Kopi Gayo Premium',
-      price: 75000,
-      stock: 'In Stock',
-      category: 'Minuman',
-      imageId: 'product-1'
-    },
-    {
-      id: 'prod_2',
-      name: 'Keripik Singkong Balado',
-      price: 15000,
-      stock: 'In Stock',
-      category: 'Makanan',
-      imageId: 'product-2'
-    },
-    {
-      id: 'prod_3',
-      name: 'Batik Tulis Klasik',
-      price: 450000,
-      stock: 'Low Stock',
-      category: 'Fashion',
-      imageId: 'product-3'
-    },
-    {
-      id: 'prod_4',
-      name: 'Madu Hutan Asli',
-      price: 120000,
-      stock: 'In Stock',
-      category: 'Kesehatan',
-      imageId: 'product-4'
-    },
-    {
-      id: 'prod_5',
-      name: 'Sambal Terasi Juara',
-      price: 25000,
-      stock: 'Out of Stock',
-      category: 'Bumbu',
-      imageId: 'product-5'
-    },
-    {
-      id: 'prod_6',
-      name: 'Tas Anyam Rotan',
-      price: 250000,
-      stock: 'In Stock',
-      category: 'Aksesoris',
-      imageId: 'product-6'
-    },
-];
 
 export const chartData = [
     { date: 'Jan', visits: Math.floor(Math.random() * 1000) + 200 },

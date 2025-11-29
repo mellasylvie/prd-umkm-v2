@@ -25,35 +25,53 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 import { BarChart as RechartsBarChart, XAxis, YAxis, Bar, CartesianGrid } from "recharts"
-
-const statCards = [
-  {
-    title: "Total Kunjungan",
-    value: "1,254",
-    change: "+20.1% from last month",
-    icon: <Users className="h-4 w-4 text-muted-foreground" />,
-  },
-  {
-    title: "Klik WhatsApp",
-    value: "342",
-    change: "+180.1% from last month",
-    icon: <BarChart className="h-4 w-4 text-muted-foreground" />,
-  },
-  {
-    title: "Produk Paling Dilihat",
-    value: "Kopi Gayo",
-    change: "210 clicks",
-    icon: <Package className="h-4 w-4 text-muted-foreground" />,
-  },
-  {
-    title: "Estimasi Pendapatan",
-    value: "Rp 12.500.000",
-    change: "+32% from last month",
-    icon: <DollarSign className="h-4 w-4 text-muted-foreground" />,
-  },
-]
+import { useUser, useFirestore, useCollection, useMemoFirebase } from "@/firebase"
+import { collection, query, where } from "firebase/firestore"
 
 export default function Dashboard() {
+  const { user } = useUser();
+  const firestore = useFirestore();
+
+  const userProfileQuery = useMemoFirebase(
+    () => (user ? query(collection(firestore, 'umkm_profiles'), where('ownerId', '==', user.uid)) : null),
+    [firestore, user]
+  );
+  const { data: umkmProfiles } = useCollection(userProfileQuery);
+  const umkmProfile = umkmProfiles?.[0];
+
+  const productsQuery = useMemoFirebase(
+    () => (umkmProfile ? collection(firestore, 'umkm_profiles', umkmProfile.id, 'products') : null),
+    [firestore, umkmProfile]
+  );
+  const { data: products } = useCollection(productsQuery);
+
+  const statCards = [
+    {
+      title: "Total Produk",
+      value: products?.length ?? '0',
+      change: "Jumlah produk di katalog",
+      icon: <Package className="h-4 w-4 text-muted-foreground" />,
+    },
+    {
+      title: "Total Kunjungan",
+      value: "1,254",
+      change: "+20.1% from last month",
+      icon: <Users className="h-4 w-4 text-muted-foreground" />,
+    },
+    {
+      title: "Klik WhatsApp",
+      value: "342",
+      change: "+180.1% from last month",
+      icon: <BarChart className="h-4 w-4 text-muted-foreground" />,
+    },
+    {
+      title: "Estimasi Pendapatan",
+      value: "Rp 12.500.000",
+      change: "+32% from last month",
+      icon: <DollarSign className="h-4 w-4 text-muted-foreground" />,
+    },
+  ]
+
   return (
     <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">

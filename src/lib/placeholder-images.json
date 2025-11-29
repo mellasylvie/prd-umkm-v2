@@ -25,40 +25,10 @@
       "imageHint": "person smiling"
     },
     {
-      "id": "product-1",
-      "description": "Product image for Kopi Gayo",
-      "imageUrl": "https://images.unsplash.com/photo-1580933073521-dc49ac0d4e6a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxjb2ZmZWUlMjBiZWFuc3xlbnwwfHx8fDE3NjQzOTUxNDR8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "coffee beans"
-    },
-    {
-      "id": "product-2",
-      "description": "Product image for Keripik Singkong",
-      "imageUrl": "https://images.unsplash.com/photo-1621535788070-0bd5512e44a1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxjYXNzYXZhJTIwY2hpcHN8ZW58MHx8fHwxNzY0Mzk5NTc0fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "cassava chips"
-    },
-    {
-      "id": "product-3",
-      "description": "Product image for Batik Tulis",
-      "imageUrl": "https://images.unsplash.com/photo-1761516659766-c092d4b1209d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxiYXRpayUyMGZhYnJpY3xlbnwwfHx8fDE3NjQzOTk1NzV8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "batik fabric"
-    },
-    {
-      "id": "product-4",
-      "description": "Product image for Madu Hutan",
-      "imageUrl": "https://images.unsplash.com/photo-1663963603322-d51827492f69?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxob25leSUyMGphcnxlbnwwfHx8fDE3NjQzNDQ2MzZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "honey jar"
-    },
-    {
-      "id": "product-5",
-      "description": "Product image for Sambal Terasi",
-      "imageUrl": "https://images.unsplash.com/photo-1764032761812-5b9d24c0ed90?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjaGlsaSUyMHBhc3RlfGVufDB8fHx8MTc2NDM5OTU3NXww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "chili paste"
-    },
-    {
-      "id": "product-6",
-      "description": "Product image for Tas Anyam",
-      "imageUrl": "https://images.unsplash.com/photo-1759054716603-c1f5f72511ac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8d292ZW4lMjBiYWd8ZW58MHx8fHwxNzY0Mzk5NTc1fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "woven bag"
+      "id": "product-placeholder",
+      "description": "Generic product placeholder",
+      "imageUrl": "https://placehold.co/400x400/E8B83E/FFFFFF?text=Produk",
+      "imageHint": "product item"
     },
     {
       "id": "template-minimalist",

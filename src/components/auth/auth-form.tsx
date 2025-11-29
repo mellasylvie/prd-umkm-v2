@@ -26,11 +26,14 @@ import {
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { Mountain, Loader2 } from 'lucide-react';
-import { useAuth, useUser } from '@/firebase';
+import { useAuth, useUser, useFirestore } from '@/firebase';
 import {
   initiateEmailSignIn,
   initiateEmailSignUp,
 } from '@/firebase/non-blocking-login';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { createUmkmProfileForUser } from '@/firebase/firestore/data';
+
 
 const loginSchema = z.object({
   email: z.string().email('Email tidak valid.'),
@@ -38,6 +41,7 @@ const loginSchema = z.object({
 });
 
 const registerSchema = z.object({
+  umkmName: z.string().min(3, 'Nama UMKM minimal 3 karakter.'),
   email: z.string().email('Email tidak valid.'),
   password: z.string().min(6, 'Password minimal 6 karakter.'),
 });
@@ -50,6 +54,7 @@ export default function AuthForm({ type }: AuthFormProps) {
   const router = useRouter();
   const { toast } = useToast();
   const auth = useAuth();
+  const firestore = useFirestore();
   const { user, isUserLoading } = useUser();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -58,39 +63,51 @@ export default function AuthForm({ type }: AuthFormProps) {
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
+    defaultValues:
+      type === 'login'
+        ? {
+            email: '',
+            password: '',
+          }
+        : {
+            umkmName: '',
+            email: '',
+            password: '',
+          },
   });
 
   useEffect(() => {
-    if (user && !isUserLoading) {
-      router.push('/dashboard');
-    }
-  }, [user, isUserLoading, router]);
+    const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
+      if (firebaseUser) {
+        if (type === 'register' && 'umkmName' in form.getValues()) {
+            const values = form.getValues() as z.infer<typeof registerSchema>;
+            await createUmkmProfileForUser(firestore, firebaseUser, values.umkmName);
+        }
+        router.push('/dashboard');
+      }
+    });
+    return () => unsubscribe();
+  }, [auth, firestore, router, type, form]);
+
 
   const onSubmit = async (values: FormValues) => {
     setIsSubmitting(true);
     try {
       if (type === 'login') {
-        initiateEmailSignIn(auth, values.email, values.password);
-      } else {
-        initiateEmailSignUp(auth, values.email, values.password);
+        await initiateEmailSignIn(auth, values.email, values.password);
+      } else if (type === 'register' && 'umkmName' in values) {
+        await initiateEmailSignUp(auth, values.email, values.password);
       }
-      // The onAuthStateChanged listener in the provider will handle redirection
-      // Non-blocking, so we don't await here. We show a toast instead.
       toast({
-        title: type === 'login' ? 'Login Initiated' : 'Registration Initiated',
-        description:
-          'You will be redirected shortly.',
+        title: 'Mohon tunggu...',
+        description: 'Anda akan segera dialihkan.',
       });
     } catch (error: any) {
       setIsSubmitting(false);
       toast({
         variant: 'destructive',
-        title: 'Authentication Failed',
-        description: error.message || 'An unexpected error occurred.',
+        title: 'Autentikasi Gagal',
+        description: error.message || 'Terjadi kesalahan tak terduga.',
       });
     }
   };
@@ -125,6 +142,25 @@ export default function AuthForm({ type }: AuthFormProps) {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+               {type === 'register' && (
+                <FormField
+                  control={form.control}
+                  name="umkmName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nama Usaha (UMKM)</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="cth. Kopi Kenangan Senja"
+                          {...field}
+                          disabled={isSubmitting}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
               <FormField
                 control={form.control}
                 name="email"

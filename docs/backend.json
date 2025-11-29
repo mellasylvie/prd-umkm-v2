@@ -13,6 +13,10 @@
           "type": "string",
           "format": "email",
           "description": "The user's email address."
+        },
+        "umkmProfileId": {
+          "type": "string",
+          "description": "The ID of the UMKM profile associated with this user."
         }
       },
       "required": ["id", "email"]
@@ -28,8 +32,8 @@
           "description": "Unique identifier for the UMKM profile."
         },
         "ownerId": {
-            "type": "string",
-            "description": "The UID of the user who owns this UMKM profile."
+          "type": "string",
+          "description": "The UID of the user who owns this UMKM profile."
         },
         "name": {
           "type": "string",
@@ -87,7 +91,7 @@
           "type": "string",
           "description": "Unique identifier for the product."
         },
-        "umkmId": {
+        "umkmProfileId": {
           "type": "string",
           "description": "Reference to the UmkmProfile that owns this product. (Relationship: UmkmProfile 1:N Product)"
         },
@@ -119,7 +123,7 @@
       },
       "required": [
         "id",
-        "umkmId",
+        "umkmProfileId",
         "name",
         "price",
         "description"

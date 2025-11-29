@@ -1,6 +1,10 @@
-"use client"
+'use client';
 
-import { Button } from "@/components/ui/button"
+import { useState } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -9,26 +13,100 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { productCategories } from "@/lib/data"
-import { Upload } from "lucide-react"
+} from '@/components/ui/select';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form';
+import { Upload, Loader2 } from 'lucide-react';
+import { useFirestore } from '@/firebase';
+import { addProduct } from '@/firebase/firestore/data';
+import { useToast } from '@/hooks/use-toast';
 
-export default function AddProductDialog({ children }: { children: React.ReactNode }) {
+const productSchema = z.object({
+  name: z.string().min(3, 'Nama produk minimal 3 karakter'),
+  price: z.coerce.number().positive('Harga harus lebih dari 0'),
+  description: z.string().min(10, 'Deskripsi minimal 10 karakter'),
+  category: z.string({ required_error: 'Kategori harus dipilih' }),
+  stockStatus: z.string({ required_error: 'Status stok harus dipilih' }),
+  imageUrl: z.string().url('URL gambar tidak valid').optional(),
+});
+
+type ProductFormValues = z.infer<typeof productSchema>;
+
+const productCategories = [
+  'Minuman', 'Makanan', 'Fashion', 'Kesehatan', 'Bumbu', 'Aksesoris'
+]
+
+export default function AddProductDialog({
+  children,
+  umkmProfileId,
+}: {
+  children: React.ReactNode;
+  umkmProfileId?: string;
+}) {
+  const firestore = useFirestore();
+  const { toast } = useToast();
+  const [open, setOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const form = useForm<ProductFormValues>({
+    resolver: zodResolver(productSchema),
+    defaultValues: {
+        name: '',
+        price: 0,
+        description: '',
+        imageUrl: 'https://placehold.co/400x400/E8B83E/FFFFFF?text=Produk'
+    }
+  });
+
+  const onSubmit = async (data: ProductFormValues) => {
+    if (!umkmProfileId) {
+      toast({
+        variant: 'destructive',
+        title: 'Gagal',
+        description: 'Profil UMKM tidak ditemukan.',
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await addProduct(firestore, umkmProfileId, data);
+      toast({
+        title: 'Berhasil!',
+        description: 'Produk baru telah ditambahkan.',
+      });
+      form.reset();
+      setOpen(false);
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Gagal Menambahkan Produk',
+        description: 'Terjadi kesalahan. Silakan coba lagi.',
+      });
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        {children}
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Tambah Produk Baru</DialogTitle>
@@ -36,54 +114,111 @@ export default function AddProductDialog({ children }: { children: React.ReactNo
             Isi detail produk Anda di bawah ini. Klik simpan jika sudah selesai.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid w-full max-w-sm items-center gap-1.5">
-            <Label htmlFor="picture">Foto Produk</Label>
-            <Button variant="outline"><Upload className="mr-2 h-4 w-4" /> Upload Foto</Button>
-          </div>
-          <div className="grid w-full max-w-sm items-center gap-1.5">
-            <Label htmlFor="name">Nama Produk</Label>
-            <Input id="name" placeholder="cth. Kopi Gayo Premium" />
-          </div>
-          <div className="grid w-full max-w-sm items-center gap-1.5">
-            <Label htmlFor="price">Harga</Label>
-            <Input id="price" type="number" placeholder="cth. 75000" />
-          </div>
-          <div className="grid w-full max-w-sm items-center gap-1.5">
-            <Label htmlFor="description">Deskripsi</Label>
-            <Textarea id="description" placeholder="Jelaskan tentang produk Anda" />
-          </div>
-          <div className="grid w-full max-w-sm items-center gap-1.5">
-            <Label htmlFor="category">Kategori</Label>
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Pilih Kategori" />
-              </SelectTrigger>
-              <SelectContent>
-                {productCategories.filter(c => c !== 'Semua').map(category => (
-                  <SelectItem key={category} value={category}>{category}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="grid w-full max-w-sm items-center gap-1.5">
-            <Label htmlFor="stock">Status Stok</Label>
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Pilih Status Stok" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="In Stock">In Stock</SelectItem>
-                <SelectItem value="Low Stock">Low Stock</SelectItem>
-                <SelectItem value="Out of Stock">Out of Stock</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-        <DialogFooter>
-          <Button type="submit">Simpan Produk</Button>
-        </DialogFooter>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 py-4">
+            <div className="grid w-full max-w-sm items-center gap-1.5">
+              <Label htmlFor="picture">Foto Produk</Label>
+              <Button variant="outline" type="button">
+                <Upload className="mr-2 h-4 w-4" /> Upload Foto
+              </Button>
+            </div>
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <Label>Nama Produk</Label>
+                  <FormControl>
+                    <Input placeholder="cth. Kopi Gayo Premium" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem>
+                  <Label>Harga</Label>
+                  <FormControl>
+                    <Input type="number" placeholder="cth. 75000" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <Label>Deskripsi</Label>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Jelaskan tentang produk Anda"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem>
+                  <Label>Kategori</Label>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Pilih Kategori" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {productCategories.map((category) => (
+                        <SelectItem key={category} value={category}>
+                          {category}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="stockStatus"
+              render={({ field }) => (
+                <FormItem>
+                  <Label>Status Stok</Label>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Pilih Status Stok" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="In Stock">In Stock</SelectItem>
+                      <SelectItem value="Low Stock">Low Stock</SelectItem>
+                      <SelectItem value="Out of Stock">Out of Stock</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+             <DialogFooter>
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Simpan Produk
+                </Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
