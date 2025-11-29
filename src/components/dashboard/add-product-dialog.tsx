@@ -35,6 +35,7 @@ import { Upload, Loader2 } from 'lucide-react';
 import { useFirestore } from '@/firebase';
 import { addProduct } from '@/firebase/firestore/data';
 import { useToast } from '@/hooks/use-toast';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const productSchema = z.object({
   name: z.string().min(3, 'Nama produk minimal 3 karakter'),
@@ -107,117 +108,119 @@ export default function AddProductDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Tambah Produk Baru</DialogTitle>
           <DialogDescription>
             Isi detail produk Anda di bawah ini. Klik simpan jika sudah selesai.
           </DialogDescription>
         </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 py-4">
-            <div className="grid w-full max-w-sm items-center gap-1.5">
-              <Label htmlFor="picture">Foto Produk</Label>
-              <Button variant="outline" type="button">
-                <Upload className="mr-2 h-4 w-4" /> Upload Foto
-              </Button>
-            </div>
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <Label>Nama Produk</Label>
-                  <FormControl>
-                    <Input placeholder="cth. Kopi Gayo Premium" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="price"
-              render={({ field }) => (
-                <FormItem>
-                  <Label>Harga</Label>
-                  <FormControl>
-                    <Input type="number" placeholder="cth. 75000" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <Label>Deskripsi</Label>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Jelaskan tentang produk Anda"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="category"
-              render={({ field }) => (
-                <FormItem>
-                  <Label>Kategori</Label>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Pilih Kategori" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {productCategories.map((category) => (
-                        <SelectItem key={category} value={category}>
-                          {category}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="stockStatus"
-              render={({ field }) => (
-                <FormItem>
-                  <Label>Status Stok</Label>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Pilih Status Stok" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="In Stock">In Stock</SelectItem>
-                      <SelectItem value="Low Stock">Low Stock</SelectItem>
-                      <SelectItem value="Out of Stock">Out of Stock</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-             <DialogFooter>
-                <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Simpan Produk
+        <ScrollArea className="max-h-[70vh] -mx-6">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 py-4 px-6">
+              <div className="grid w-full max-w-sm items-center gap-1.5">
+                <Label htmlFor="picture">Foto Produk</Label>
+                <Button variant="outline" type="button">
+                  <Upload className="mr-2 h-4 w-4" /> Upload Foto
                 </Button>
-            </DialogFooter>
-          </form>
-        </Form>
+              </div>
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <Label>Nama Produk</Label>
+                    <FormControl>
+                      <Input placeholder="cth. Kopi Gayo Premium" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="price"
+                render={({ field }) => (
+                  <FormItem>
+                    <Label>Harga</Label>
+                    <FormControl>
+                      <Input type="number" placeholder="cth. 75000" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <Label>Deskripsi</Label>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Jelaskan tentang produk Anda"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem>
+                    <Label>Kategori</Label>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Pilih Kategori" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {productCategories.map((category) => (
+                          <SelectItem key={category} value={category}>
+                            {category}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="stockStatus"
+                render={({ field }) => (
+                  <FormItem>
+                    <Label>Status Stok</Label>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Pilih Status Stok" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="In Stock">Stok Tersedia</SelectItem>
+                        <SelectItem value="Low Stock">Stok Terbatas</SelectItem>
+                        <SelectItem value="Out of Stock">Stok Habis</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+               <DialogFooter className="mt-4 sticky bottom-0 bg-background pt-4 pb-0 -mx-6 px-6">
+                  <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
+                    {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Simpan Produk
+                  </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );

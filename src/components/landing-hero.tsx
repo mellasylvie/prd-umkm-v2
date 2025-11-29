@@ -22,12 +22,12 @@ export default function LandingHero() {
             </div>
             <div className="flex flex-col gap-2 min-[400px]:flex-row">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                <Link href="/dashboard" prefetch={false}>
+                <Link href="/register" prefetch={false}>
                   Mulai Sekarang
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline">
-                <Link href="#" prefetch={false}>
+                <Link href="/site/contoh" prefetch={false}>
                   Lihat Contoh Minisite
                 </Link>
               </Button>

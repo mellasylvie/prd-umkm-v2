@@ -76,6 +76,15 @@ export default function PromotionGenerator() {
     },
   });
 
+  const handleShare = (sharedata: {
+    title: string,
+    url: string,
+    text: string,
+  }) => {
+     navigator.share({ ...sharedata }).then(() => 
+      console.log("Success")).then((e) => console.log(e))
+  }
+
   const onSubmit = async (data: GeneratePromotionalContentInput) => {
     setIsLoading(true);
     setGeneratedContent('');
@@ -284,7 +293,11 @@ export default function PromotionGenerator() {
                 <Button variant="outline" onClick={copyToClipboard} disabled={!generatedContent}>
                     <Copy className="mr-2 h-4 w-4" /> Salin
                 </Button>
-                <Button disabled={!generatedContent}>
+                <Button disabled={!generatedContent} onClick={() => handleShare({
+                  title: form.watch('productName'),
+                  url: window.location.href,
+                  text: generatedContent.slice(0, 100)
+                })}>
                     <Share2 className="mr-2 h-4 w-4" /> Bagikan
                 </Button>
              </CardFooter>
